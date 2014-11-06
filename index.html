@@ -1,0 +1,329 @@
+<!doctype html>
+
+<html>
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="utf-8">
+		<meta content=" 在线制作空气污染预报" name="description"/>
+	
+		<title>在线制作空气污染预报</title>
+		
+		    <!-- 新 Bootstrap 核心 CSS 文件 -->
+		<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		  <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+		<style>
+			html, body, .fullheight{
+				height:100%;
+			}
+			
+			#edit .base>td, #edit thead th{
+				padding:12px 8px;
+			}
+			#edit td.value:hover {
+				border-bottom: 2px solid blue;
+				cursor: text;
+			}
+
+			#level-select > li>a{
+			padding: 5px 20px;
+			}
+		</style>
+		
+	</head>
+
+	<body>
+		<div class="page-header">
+		  <h1>在线制作空气污染预报</h1>
+		</div>
+
+		
+		<div class="container-fluid">
+			<div class="row" id='zdb'>
+			  <div class="col-md-4">
+				<div class="thumbnail">
+				  <img src="http://area.sinaapp.com/bingImg/" alt="24小时指导预报未下发！">
+				  <div class="caption">
+					<h3>24小时</h3>
+				  </div>
+				</div>
+			  </div>
+			  <div class="col-md-4">
+				<div class="thumbnail">
+				  <img src="http://area.sinaapp.com/bingImg/" alt="48小时指导预报未下发！">
+				  <div class="caption">
+					<h3>48小时</h3>
+				  </div>
+				</div>
+			  </div>
+			  <div class="col-md-4">
+				<div class="thumbnail">
+				  <img src="http://area.sinaapp.com/bingImg/" alt="72小时指导预报未下发！">
+				  <div class="caption">
+					<h3>72小时</h3>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			<div class='row'>
+				<div class="col-md-6">
+					<table id="edit" class="table table-bordered table-hover">
+						<thead>
+							<tr>
+							<th width="25%">站点</th><th width="25%">24小时</th><th width="25%">48小时</th><th width="25%">72小时</th>
+							</tr>
+						</thead>
+
+						<tbody>
+						<tr class="base" num="00000"><td class="name">基准</td><td class="value" data-span="24" >二级(较好)</td><td class="value" data-span="48">二级(较好)</td><td class="value" data-span="72">二级(较好)</td></tr>
+						
+						<!-- 
+						<tr class="station" num="57070"><td class="name">新安</td><td class="value" name="24小时">二级(较好)</td><td class="value" name="48小时">二级(较好)</td><td class="value" name="72小时">二级(较好)</td></tr>
+						<tr class="station" num="57071"><td class="name">孟津</td><td class="value" name="24小时">二级(较好)</td><td class="value" name="48小时">二级(较好)</td><td class="value" name="72小时">二级(较好)</td></tr>
+						<tr class="station" num="57073"><td class="name">洛阳</td><td class="value" name="24小时">二级(较好)</td><td class="value" name="48小时">二级(较好)</td><td class="value" name="72小时">二级(较好)</td></tr>
+						-->
+						</tbody>
+
+					</table>
+					<ul id='level-select' class="dropdown-menu">
+						<li class="" data-level='1'><a href='#'>一级(好)</a></li>
+						<li class="" data-level='2'><a href='#'>二级(较好)</a></li>
+						<li class="" data-level='3'><a href='#'>三级(一般)</a></li>
+						<li class="" data-level='4'><a href='#'>四级(较差)</a></li>
+						<li class="" data-level='5'><a href='#'>五级(差)</a></li>
+						<li class="" data-level='6'><a href='#'>六级(极差)</a></li>
+					</ul>
+				</div>
+				<div class='col-md-6'>
+					
+					
+					<button id='upload' type="button" class="btn btn-primary btn-lg">一键上传</button>
+				</div>
+			</div>
+		</div>
+	
+		<script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+		<script src="http://cdn.staticfile.org/moment.js/2.7.0/moment.min.js"></script>
+		<script src="http://cdn.staticfile.org/highcharts/4.0.1/highcharts.js"></script>
+		
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+		<script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		
+		<script>
+		$(function(){
+			//------------------zdb img begin-------------------------
+			$('#zdb img').each(function(index){
+				var span = ['024.jpg','048.jpg','072.jpg'];
+				
+				var cur = moment();
+				var hour = cur.hour() > 12 ? '20' : '08';
+				var filename = 'kw_LQ_BEZZ_'+ cur.format('YYMMDD')+ hour + span[index];
+				$(this).attr({src: 'libs/zdb-img.php?filename='+filename});
+			})
+			//------------------zdb img end-------------------------
+			
+			
+			var stations = [ '洛阳市区', '吉利', '新安', '孟津' ,'偃师', '洛宁', '宜阳', '伊川' , '栾川' , '嵩县' , '汝阳'];
+			var htmlStationTemplate = $('#template-station').html();
+			
+			$.each(stations, function(index,val){
+				var htmlStation = htmlStationTemplate.replace('站名', val);
+				$('#edit>tbody').append(htmlStation);
+			})
+		
+			var curJdom, baseSelect = false, timerLevel;
+			
+			
+			$('.value').click(function(e){
+				
+				curJdom = $(this);
+				
+				var left = curJdom.offset().left, top = curJdom.offset().top;
+				//console.log(left+' '+top);
+				
+				clearTimeout(timerLevel);
+				
+				$('#level-select').show().offset({top:top, left:left+80});
+				
+				timerLevel = setTimeout(function(){
+					$('#level-select').hide();
+				}, 5000);
+				
+				baseSelect = curJdom.parent().hasClass('base')
+			});
+			
+			
+			$('#level-select>li>a').click(function(){
+				var val = $(this).text();
+				if( baseSelect ){
+					var col = Math.round(curJdom.data('span')/24 - 1);
+					
+					
+					$('#edit>tbody>tr').each(function(){
+						$(this).find('.value').eq(col).text(val);
+					})
+				
+				}else{
+					curJdom.text(val);
+				}
+				
+				$('#level-select').hide();
+				
+				return false;
+			})
+			
+		})
+		</script>
+		
+		<script>
+		$(function(){
+			var getFileName = function(){
+				//MSP3_BFLB_ENVAPPF_ME_L88_ST_201411012000_D0000-D0003.TXT
+				
+				var cur = moment();
+				var hour='08';
+				if(cur.hour() > 12) hour='20';
+				
+				return 'MSP3_BFLB_ENVAPPF_ME_L88_ST_'+ cur.format('YYYYMMDD')+ hour +'00_D0000-D0003.TXT';
+			}
+			
+			var getTimeDescription = function(){
+				//2014年11月1日20时-2014年11月4日20时
+				
+				var begin = moment(), end = moment().add(3,'days');
+				var hour='08';
+				if(begin.hour() > 12) hour='20';
+				
+				return begin.format('YYYY年MM月DD日')+hour+'时------' + end.format('YYYY年MM月DD日')+hour+'时';
+			}
+			
+			var getChars = function(_char, n){
+				var br = '';
+				for(var i=0; i<n; i++){
+					br += _char;
+				}
+				
+				return br;
+			}
+			
+			var getContent = function(){
+				var content = '洛阳市空气污染气象条件等级预报'+ getChars('\r\n', 2);
+				
+				content += getTimeDescription() + getChars('\r\n', 3);
+				
+				content += '区 域        24小时         48小时         72小时' + getChars('\r\n', 2);
+				
+				$('#edit>tbody>tr.station').each(function(){
+					content += $(this).find('.name').text() + getChars(' ', 7);
+					
+					$(this).find('.value').each(function(){
+						content += $(this).text() + getChars(' ', 5);
+					})
+					
+					content +=  getChars('\r\n', 1);
+				})
+				
+				content +=  getChars('\r\n', 3) + getChars(' ', 20) + '洛阳市气象台' + getChars('\r\n', 2);
+				
+				content +=  getChars(' ', 20) + moment().format('YYYY年MM月DD日HH时制作');
+				
+				//console.log(content);
+				
+				return content;
+			}
+			
+			var escape = function(str){
+				var result = $('<div/>').text(str).html();
+				result = result.replace(/\r\n/g,'<br>');
+				result = result.replace(/ /g,'&nbsp;');
+				
+				return result;
+			}
+			
+			$('#upload').click(function(){
+				var that = this;
+				
+				$(this).attr({disabled: 'disabled'}).text('正在上传…');
+				
+				var filename = getFileName();
+				var content = getContent();
+				
+				var getFailTips = function(){
+					htmltip = $('#template-alert-warning').html();
+						
+					var innertip = '<h3>上传失败，请按照以下信息手动创建文件！</h3>';
+					innertip += '<dl class="dl-horizontal">';
+					innertip += '<dt>路径</dt><dd>\\\\172.18.172.63\\data_\\xjdata\\FORECAST\\kqwr\\</dd>';
+					innertip += '<dt>文件名</dt><dd>'+ filename + '</dd>';
+					innertip += '<dt>内容</dt><dd>'+ escape(content) + '</dd>';
+					innertip += '</dl>';
+					
+					htmltip = $(htmltip).append(innertip);
+					
+					return htmltip;
+				}
+				
+				$.post('libs/service.php', {
+					action: 'upload',
+					filename: filename,
+					content: content
+				}, 'text')
+				.done(function(text) { //alert("second success");
+					var htmltip = '';
+					if(text === '1'){
+						htmltip = $('#template-alert-success').html();
+						
+					}else if(text === '2'){
+						htmltip = $('#template-alert-warning').html();
+						
+						var innertip = '<h3>文件已上传至 xjdata\FORECAST\kqwr, 但传输至公共气象产品库失败！</h3>请手动上传文件到产品库。';
+						
+						htmltip = $(htmltip).append(innertip);
+						
+					}else{//服务器无法在\\172.18.172.63\\data_创建文件
+						htmltip = getFailTips();
+					}
+					
+
+					$(that).before(htmltip);
+				})
+				.fail(function() {//无法连接服务器
+					var htmltip = getFailTips();
+					$(that).before(htmltip);
+				})
+				.always(function() { //alert("complete");
+					$(that).removeAttr('disabled').text('一键上传');
+				});
+			})
+		});
+		</script>
+		
+		<script type='template/text' id='template-station'>
+		<tr class="station" num="57073"><td class="name">站名</td><td class="value" name="24小时">二级(较好)</td><td class="value" name="48小时">二级(较好)</td><td class="value" name="72小时">二级(较好)</td></tr>
+		</script>
+
+		<script type='template/text' id='template-alert-success'>
+			<div class="alert alert-success alert-dismissible" role="alert">
+					  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					  <strong>上传成功!</strong> 文件已保存至 xjdata\FORECAST\kqwr 并 成功上传到公共气象产品库.
+					</div>
+		</script>
+		
+		<script type='template/text' id='template-alert-warning'>
+			<div class="alert alert-warning alert-dismissible" role="alert">
+					  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			</div>
+		</script>
+	</body>
+
+</html>
