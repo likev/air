@@ -37,6 +37,11 @@
 			#level-select > li>a{
 			padding: 5px 20px;
 			}
+			
+			.thumbnail {
+				border: none;
+				box-shadow: none;
+			}
 		</style>
 		
 	</head>
@@ -48,7 +53,8 @@
 
 		
 		<div class="container-fluid">
-			<div class="row" id='zdb'>
+			
+			<div class="row" id='hnzdb'>
 			  <div class="col-md-4">
 				<div class="thumbnail">
 				  <img src="http://area.sinaapp.com/bingImg/" alt="24小时指导预报未下发！">
@@ -110,6 +116,33 @@
 					<button id='upload' type="button" class="btn btn-primary btn-lg">一键上传</button>
 				</div>
 			</div>
+			
+			<div class="row" id='nmczdb'>
+			  <div class="col-md-4">
+				<div class="thumbnail">
+				  <img src="http://area.sinaapp.com/bingImg/" alt="24小时指导预报未下发！">
+				  <div class="caption">
+					<h3>24小时</h3>
+				  </div>
+				</div>
+			  </div>
+			  <div class="col-md-4">
+				<div class="thumbnail">
+				  <img src="http://area.sinaapp.com/bingImg/" alt="48小时指导预报未下发！">
+				  <div class="caption">
+					<h3>48小时</h3>
+				  </div>
+				</div>
+			  </div>
+			  <div class="col-md-4">
+				<div class="thumbnail">
+				  <img src="http://area.sinaapp.com/bingImg/" alt="72小时指导预报未下发！">
+				  <div class="caption">
+					<h3>72小时</h3>
+				  </div>
+				</div>
+			  </div>
+			</div>
 		</div>
 	
 		<script src="https://cdn.jsdelivr.net/npm/jquery@1.11.1/dist/jquery.min.js"></script>
@@ -120,8 +153,19 @@
 		
 		<script>
 		$(function(){
-			//------------------zdb img begin-------------------------
-			$('#zdb img').each(function(index){
+			//------------------nmczdb img begin-------------------------
+			$('#nmczdb img').each(function(index){
+				var span = ['02424.JPG','04824.JPG','07224.JPG'];
+				
+				var cur = moment();
+				
+				var filename = 'http://image.nmc.cn/product/'+ cur.format('YYYY/MM/DD') +'/APWF/medium/SEVP_NMC_APWF_SFER_EAIRP_ACHN_LNO_P9_'+ cur.format('YYYYMMDD') +'0000'+ span[index];
+				$(this).attr({src: filename});
+			})
+			//------------------nmczdb img end-------------------------
+			
+			//------------------hnzdb img begin-------------------------
+			$('#hnzdb img').each(function(index){
 				var span = ['024.jpg','048.jpg','072.jpg'];
 				
 				var cur = moment();
@@ -129,7 +173,7 @@
 				var filename = 'kw_LQ_BEZZ_'+ cur.format('YYMMDD')+ hour + span[index];
 				$(this).attr({src: 'libs/zdb-img.php?filename='+filename});
 			})
-			//------------------zdb img end-------------------------
+			//------------------hnzdb img end-------------------------
 			
 			
 			var stations = [ '洛阳市区', '吉利', '新安', '孟津' ,'偃师', '洛宁', '宜阳', '伊川' , '栾川' , '嵩县' , '汝阳'];
